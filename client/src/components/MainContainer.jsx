@@ -88,7 +88,7 @@ const MainContainer = () => {
 
     // Send the user's input to the server
     try {
-      const response = await axios.post("http://localhost:3000/", {
+      const response = await axios.post("https://luna-ibfx.onrender.com/", {
         userInput: text,
       });
 
