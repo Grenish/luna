@@ -1,0 +1,193 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color1: #5606ff;
+  --color2: #fe8989;
+  --color3: #000000;
+  --blending: hard-light;
+  --size: 80%;
+}
+
+body {
+  scroll-behavior: smooth;
+}
+
+/* .gradientAnim {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  background: linear-gradient(
+    90deg,
+    var(--color1),
+    var(--color2),
+    var(--color3)
+  );
+  z-index: -10;
+} */
+
+.circle1 {
+  animation: move 60s infinite;
+}
+
+.circle2 {
+  animation: move2 90s infinite;
+}
+
+@keyframes move {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40% {
+    transform: translate(-100%, 40%);
+  }
+  60% {
+    transform: translate(80%, -20%);
+  }
+  80% {
+    transform: translate(-20%, 80%);
+  }
+}
+@keyframes move2 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40% {
+    transform: translate(-130%, -140%);
+  }
+  60% {
+    transform: translate(100%, -20%);
+  }
+  80% {
+    transform: translate(-120%, 120%);
+  }
+}
+
+@keyframes gradient {
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d81e5b;
+}
+
+/* Chrome, Edge and Safari */
+*::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 20px;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-color: #d81e5b;
+}
+
+#cards {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 916px;
+  width: calc(100% - 20px);
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background-color: rgba(198, 216, 211, 0.263);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100px;
+  width: 250px;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 10px;
+  position: relative;
+  font-size: 12px;
+}
+
+@media screen and (max-width: 600px) {
+  #cards {
+    width: calc(100% - 10px); /* Reduce the left and right margin */
+    flex-direction: column; /* Stack the card vertically */
+  }
+
+  .card {
+    width: 90%; /* Full width on small screens */
+    height: 75px;
+    margin-bottom: 8px; /* Add a bottom margin */
+  }
+}
+
+.card::before {
+  content: "";
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border-radius: inherit;
+  z-index: 2;
+  background: radial-gradient(
+    300px circle at var(--mouse-x) var(--mouse-y),
+    rgba(216, 30, 91, 0.266),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 500ms;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+#gradient-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  --gradient-color-1: #53df83;
+  --gradient-color-2: #47d2e9;
+  --gradient-color-3: #3f3f3f;
+  --gradient-color-4: #eeeeee;
+}
+
+/* Add these styles to your existing CSS stylesheet */
+.word-animation {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.word-animation span {
+  display: inline-block;
+  transform: translateY(1em);
+  opacity: 0;
+  animation: wordAppear 0.5s forwards;
+}
+
+@keyframes wordAppear {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Add this style to your existing CSS or create a new CSS file */
+.code-block {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto; /* Enable horizontal scrolling for long lines of code */
+  white-space: pre-wrap; /* Preserve line breaks and wrap text */
+  font-family: 'Courier New', Courier, monospace; /* Use a monospace font for code */
+}
