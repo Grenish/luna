@@ -5,70 +5,29 @@
 @tailwind utilities;
 
 :root {
-  --color1: #5606ff;
-  --color2: #fe8989;
-  --color3: #000000;
-  --blending: hard-light;
-  --size: 80%;
+  --color1: #21251f;
+  --color2: #c8f560;
+  --color3: #4e515c;
+  --color4: #7862f8;
 }
 
 body {
   scroll-behavior: smooth;
 }
 
-/* .gradientAnim {
-  width: 100%;
-  height: 100vh;
-  position: absolute;
+.backGradient {
+  background: rgb(33, 37, 31);
   background: linear-gradient(
-    90deg,
-    var(--color1),
-    var(--color2),
-    var(--color3)
+    153deg,
+    rgba(33, 37, 31, 1) 13%,
+    rgba(78, 81, 92, 1) 83%
   );
-  z-index: -10;
-} */
-
-.circle1 {
-  animation: move 60s infinite;
 }
 
-.circle2 {
-  animation: move2 90s infinite;
-}
-
-@keyframes move {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  40% {
-    transform: translate(-100%, 40%);
-  }
-  60% {
-    transform: translate(80%, -20%);
-  }
-  80% {
-    transform: translate(-20%, 80%);
-  }
-}
-@keyframes move2 {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  40% {
-    transform: translate(-130%, -140%);
-  }
-  60% {
-    transform: translate(100%, -20%);
-  }
-  80% {
-    transform: translate(-120%, 120%);
-  }
-}
-
-@keyframes gradient {
+.backPattern{
+  background-image: url("./assets/backPattern.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 /* Firefox */
@@ -104,9 +63,9 @@ body {
 }
 
 .card {
-  background-color: rgba(198, 216, 211, 0.263);
+  background-color: rgba(78, 81, 92, 0.263);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  height: 100px;
+  height: auto;
   width: 250px;
   border-radius: 10px;
   cursor: pointer;
@@ -123,7 +82,7 @@ body {
 
   .card {
     width: 90%; /* Full width on small screens */
-    height: 75px;
+    height: auto;
     margin-bottom: 8px; /* Add a bottom margin */
   }
 }
@@ -139,7 +98,7 @@ body {
   z-index: 2;
   background: radial-gradient(
     300px circle at var(--mouse-x) var(--mouse-y),
-    rgba(216, 30, 91, 0.266),
+    rgba(200, 245, 96, 0.338),
     transparent 40%
   );
   opacity: 0;
@@ -150,44 +109,32 @@ body {
   opacity: 1;
 }
 
-#gradient-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  --gradient-color-1: #53df83;
-  --gradient-color-2: #47d2e9;
-  --gradient-color-3: #3f3f3f;
-  --gradient-color-4: #eeeeee;
-}
-
-/* Add these styles to your existing CSS stylesheet */
-.word-animation {
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.word-animation span {
-  display: inline-block;
-  transform: translateY(1em);
-  opacity: 0;
-  animation: wordAppear 0.5s forwards;
-}
-
-@keyframes wordAppear {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Add this style to your existing CSS or create a new CSS file */
 .code-block {
   background-color: #f4f4f4;
   padding: 10px;
   border-radius: 5px;
   overflow-x: auto; /* Enable horizontal scrolling for long lines of code */
   white-space: pre-wrap; /* Preserve line breaks and wrap text */
-  font-family: 'Courier New', Courier, monospace; /* Use a monospace font for code */
+  font-family: "Courier New", Courier, monospace; /* Use a monospace font for code */
+}
+
+.circle1{
+  background-color: var(--color4);
+  height: 300px;
+  width: 300px;
+  border-radius: 50%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  filter: blur(200px);
+}
+.circle2{
+  background-color: var(--color2);
+  height: 300px;
+  width: 300px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  filter: blur(200px);
 }
