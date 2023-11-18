@@ -1,11 +1,13 @@
-![image](https://github.com/Grenish/luna/assets/107925840/757ff95c-baed-41b1-8d19-5c766f8d9264)
+![image](https://github.com/Grenish/luna/assets/107925840/5ac03f98-43fc-4aa4-af91-e0232e45ad1b)
+
 # luna
 Luna is a chatbot fine-tuned from the PaLM (Pathway Language Model) model. It is still in beta testing, but it can already perform a variety of tasks, including:
 1. Answering your questions in an informative way, even if they are open-ended, challenging, or strange.
 2. Generating different creative text formats of text content, like poems, code, scripts, musical pieces, emails, letters, etc.
 3. Translating languages.
 
-![image](https://github.com/Grenish/luna/assets/107925840/72f434b5-c064-40a2-be5a-583893dba771)
+![image](https://github.com/Grenish/luna/assets/107925840/66c53b2a-6d15-4b1c-8e62-266119908858)
+
 
 # How Luna Works
 Luna is a large language model (LLM) that has been trained on a massive dataset of text and code. This allows it to understand and generate human language in a way that is both natural and informative.
@@ -20,7 +22,7 @@ Luna is still in beta testing, but it can already do a variety of things. Here a
 2. Generate different creative text formats, such as poems, code, scripts, musical pieces, email, and letters.
 3. Translate languages.
 
-![image](https://github.com/Grenish/luna/assets/107925840/e8c5de5b-1f0e-41ac-bd76-e1fda56e56c1)
+![image](https://github.com/Grenish/luna/assets/107925840/f135ca41-bf74-48ef-b607-48f2930ec840)
 
 # Known Limitations
 Luna is still under development, and it is important to keep in mind that it may sometimes provide incorrect information or may not be able to answer your questions. Additionally, the file upload system is not yet implemented, and there is no user login system.
