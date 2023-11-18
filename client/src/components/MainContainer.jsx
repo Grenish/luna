@@ -68,7 +68,6 @@ const MainContainer = () => {
   const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  
 
   useEffect(() => {
     // Scroll to the bottom of the chat container when messages are updated
@@ -80,12 +79,13 @@ const MainContainer = () => {
 
   const sendMessage = async (text, sender) => {
     const newMessage = { text, sender };
-    setMessages(prevMessages => [...prevMessages, newMessage]);
-
+    setMessages((prevMessages) => {
+      // console.log("Updating Messages with New Message:", [...prevMessages, messages]);
+      return [...prevMessages, newMessage];
+    });
     setLoading(true);
-
+    
     setTextInput("");
-
     // Send the user's input to the server
     try {
       const response = await axios.post("https://luna-ibfx.onrender.com/", {
@@ -106,9 +106,8 @@ const MainContainer = () => {
         text: textString,
         sender: "luna",
       };
-      setMessages(prevMessages => [...prevMessages, lunaResponse])
 
-      // setMessages((prevMessages) => [...prevMessages, lunaResponse]);
+      setMessages((prevMessages) => [...prevMessages, lunaResponse]);
     } catch (error) {
       console.error("Error:", error.message);
       const errorMessage = {
@@ -121,13 +120,14 @@ const MainContainer = () => {
     }
   };
 
-  const handleOnSubmit = (e) => {
-    e.preventDefault();
-    if (textInput.trim() !== "") {
-      sendMessage(textInput, "user");
+  const handleOnSubmit = async (e) => {
+    if (e.key === "Enter" && textInput.trim() !== "") {
+      e.preventDefault();
+      await sendMessage(textInput, "user");
     }
   };
 
+  
   const handleCardClick = (text) => {
     setTextInput(text);
   };
@@ -244,6 +244,7 @@ const MainContainer = () => {
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
             disabled={loading}
+            onKeyDown={handleOnSubmit}
           />
 
           <div className="p-2 bg-pap rounded-xl mr-1 flex justify-center items-center">
