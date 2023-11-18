@@ -1,15 +1,46 @@
 import React, { useState, useRef, useEffect } from "react";
-import { defaultlogo, send, logo, user } from "../assets";
+import {
+  defaultlogo,
+  send,
+  logo,
+  user,
+  flac1,
+  flac2,
+  flac3,
+  copy2,
+  check,
+} from "../assets";
 import axios from "axios";
 
 const CardComponent = ({ onCardClick }) => {
-  const example = [
-    "Can you come up with some names for a mocktail (non-alcoholic cocktail) with Coke and pomegranate syrup?",
-    "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
-    "Help explain in a kid-friendly way why rainbows appear",
-    "What is the best way to learn a new language?",
-    "How can I use numpy to create a 2D array?",
-    "Help me plan a game night with 5 friends. I have dice and cards, but no board games. I would be willing to get board games for under $100",
+  const examples = [
+    {
+      heading: "Get Ideas",
+      paragraph:
+        "Can you come up with some names for a mocktail (non-alcoholic cocktail) with Coke and pomegranate syrup?",
+    },
+    {
+      heading: "Code Snippet",
+      paragraph:
+        "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+    },
+    {
+      heading: "Kid-Friendly Science",
+      paragraph: "Help explain in a kid-friendly way why rainbows appear.",
+    },
+    {
+      heading: "Language Learning",
+      paragraph: "What is the best way to learn a new language?",
+    },
+    {
+      heading: "Numpy 2D Array",
+      paragraph: "How can I use numpy to create a 2D array?",
+    },
+    {
+      heading: "Game Night",
+      paragraph:
+        "Help me plan a game night with 5 friends. I have dice and cards, but no board games. I would be willing to get board games for under $100.",
+    },
   ];
 
   const handleCardClick = (text) => {
@@ -27,18 +58,30 @@ const CardComponent = ({ onCardClick }) => {
     target.style.setProperty("--mouse-y", `${y}px`);
   };
 
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + "...";
+    }
+    return text;
+  };
+
   return (
     <div id="cards" className="font-pop">
-      {example.map((item, index) => (
-        <div
-          className="card"
-          key={index}
-          onMouseMove={handleOnMouseMove}
-          onClick={() => handleCardClick(item)}
-        >
-          {item}
-        </div>
-      ))}
+      {examples
+        .slice(0, window.innerWidth < 768 ? 3 : examples.length)
+        .map((item, index) => (
+          <div
+            className="card"
+            key={index}
+            onMouseMove={handleOnMouseMove}
+            onClick={() => handleCardClick(item.paragraph)}
+          >
+            <h2 className="font-pop font-bold mb-2 text-gray-200">
+              {item.heading}
+            </h2>
+            <p className="text-ash">{truncateText(item.paragraph, 30)}</p>
+          </div>
+        ))}
     </div>
   );
 };
@@ -68,6 +111,7 @@ const MainContainer = () => {
   const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     // Scroll to the bottom of the chat container when messages are updated
@@ -84,7 +128,7 @@ const MainContainer = () => {
       return [...prevMessages, newMessage];
     });
     setLoading(true);
-    
+
     setTextInput("");
     // Send the user's input to the server
     try {
@@ -111,7 +155,7 @@ const MainContainer = () => {
     } catch (error) {
       console.error("Error:", error.message);
       const errorMessage = {
-        text: "Sorry, I didn't quite get that. Please try again",
+        text: "There is an error with the server. Please try again later.",
         sender: "luna",
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
@@ -127,7 +171,6 @@ const MainContainer = () => {
     }
   };
 
-  
   const handleCardClick = (text) => {
     setTextInput(text);
   };
@@ -151,15 +194,25 @@ const MainContainer = () => {
   };
 
   const clearChat = () => {
+    e.preventDefault();
     setMessages([]);
   };
 
+  const handleCopyClick = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // Reset the "Copied" state after 2 seconds
+  };
+
   return (
-    <div className=" bg-primeBlack p-3 w-full h-screen flex justify-center items-center relative">
+    <div className=" bg-Lig p-3 backPattern w-full sm:h-screen h-[100vh] flex justify-center overflow-hidden items-center relative">
+      <div className="circle1"></div>
+      <div className="circle2"></div>
       <div
-        className="w-full h-full bg-[#fdf0d592] rounded-xl relative backdrop-blur-xl overflow-y-auto"
+        className="w-full h-full bg-[#21251f8c] rounded-xl relative backdrop-blur-sm overflow-y-auto"
         ref={chatContainerRef}
       >
+        {/* <div className="w-full h-full z-1 backPattern absolute"></div> */}
         {/* Intro */}
 
         <div className="w-full flex flex-col justify-center items-center">
@@ -168,10 +221,10 @@ const MainContainer = () => {
             alt=""
             className="w-[150px] mt-3 pointer-events-none"
           />
-          <span className="font-pop">Your AI powered chatbot</span>
+          <span className="font-pop text-ash">Your AI powered chatbot</span>
 
           <div className="mt-5 flex w-full flex-col justify-center items-center">
-            <span className="font-pop font-black text-primeBlack text-xl text-center">
+            <span className="font-pop font-black text-ash text-xl text-center">
               Some Examples Of What I Am Capable Of
             </span>
             <div id="cards">
@@ -182,7 +235,7 @@ const MainContainer = () => {
 
         {/* ChatBoxContent */}
 
-        <div className="w-full flex flex-col justify-center items-center mt-5 mb-20">
+        <div className="w-full flex flex-col justify-center items-center mt-5 mb-20 ">
           <div className="w-full flex flex-col justify-center items-center mt-5 mb-20">
             {/* Display User Messages */}
             {messages.map((message, index) => (
@@ -190,25 +243,39 @@ const MainContainer = () => {
                 key={index}
                 className="w-full flex flex-col justify-center items-center p-2"
               >
-                <div className="w-[60%] ">
+                <div className="sm:w-[60%] w-[90%]">
                   <span className="flex items-center gap-1">
                     <img
                       src={message.sender === "user" ? user : logo}
                       alt={message.sender}
                       className={`pointer-events-none ${
-                        message.sender === "user" ? "w-6" : "w-5 mr-1"
+                        message.sender === "user" ? "w-6 " : "w-5 mr-1 "
                       }`}
                     />
-                    <span className="font-semibold pointer-events-none">
+                    <span className="font-semibold pointer-events-none text-gray-200">
                       {message.sender === "user" ? "You" : "Luna"}
                     </span>
                   </span>
                   <div
-                    className="ml-7 max-w-5xl font-pop text-sm text-primeBlack"
+                    className="ml-7 max-w-5xl font-pop text-sm text-ash"
                     dangerouslySetInnerHTML={{
                       __html: formatMessage(message.text),
                     }}
                   ></div>
+                  {message.sender === "luna" && (
+                    <div className="flex ml-6 justify-start items-center mt-1">
+                      <button
+                        className="text-xs font-pop text-ash p-1 "
+                        onClick={() => handleCopyClick(message.text)}
+                      >
+                        <img
+                          src={`${copied ? check : copy2}`}
+                          alt=""
+                          className="w-4 hover:scale-150 transition ease-in-out duration-200"
+                        />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -227,27 +294,27 @@ const MainContainer = () => {
         onSubmit={handleOnSubmit}
         className=" w-full fixed z-[999] bottom-0 p-5 flex flex-col items-center justify-center"
       >
-        <div className="w-[65%] mb-1">
+        <div className="sm:w-[65%] w-[80%] mb-1">
           <button
-            className="text-xs font-pop p-1 border-ash border-2 rounded-lg bg-transparent backdrop-blur-sm"
+            className="text-xs font-pop text-ash p-1 hover:bg-Gre hover:text-Lig transition duration-200 ease-in-out hover:border-bitter border-Blu border-2 rounded-lg bg-transparent backdrop-blur-sm"
             onClick={clearChat}
             disabled={loading}
           >
             + New
           </button>
         </div>
-        <div className=" w-2/3 rounded-2xl bg-transparent backdrop-blur-lg border-2 border-ash flex items-center">
+        <div className=" sm:w-2/3 w-11/12 rounded-2xl bg-transparent backdrop-blur-sm border-2 border-Blu flex items-center">
           <input
             type="text"
             placeholder="Ask me anything..."
-            className="w-full p-3 placeholder-primeBlack bg-transparent text-primeBlack rounded-l-2xl outline-none"
+            className="w-full p-3 placeholder-ash bg-transparent text-gray-200 rounded-l-2xl outline-none"
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
             disabled={loading}
             onKeyDown={handleOnSubmit}
           />
 
-          <div className="p-2 bg-pap rounded-xl mr-1 flex justify-center items-center">
+          <div className="p-2 bg-Gre rounded-xl mr-1 flex justify-center items-center">
             <button type="submit" disabled={loading}>
               <img src={send} alt="submit button" className="w-[20px]" />
             </button>
