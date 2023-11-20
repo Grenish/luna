@@ -112,6 +112,7 @@ const MainContainer = () => {
   const chatContainerRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [context, setContext] = useState(null);
 
   useEffect(() => {
     // Scroll to the bottom of the chat container when messages are updated
@@ -123,17 +124,14 @@ const MainContainer = () => {
 
   const sendMessage = async (text, sender) => {
     const newMessage = { text, sender };
-    setMessages((prevMessages) => {
-      // console.log("Updating Messages with New Message:", [...prevMessages, messages]);
-      return [...prevMessages, newMessage];
-    });
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
     setLoading(true);
-
     setTextInput("");
-    // Send the user's input to the server
+
     try {
       const response = await axios.post("https://luna-ibfx.onrender.com/", {
         userInput: text,
+        context, // Send context with each request
       });
 
       const formattedText = response.data.candidates[0].content.replace(
@@ -142,16 +140,17 @@ const MainContainer = () => {
       );
       const processedText = renderCodeBlocks(formattedText);
 
-      const textString = processedText
+      const textArray = processedText
         .map((element) => (element.props ? element.props.children : element))
         .join("");
 
       const lunaResponse = {
-        text: textString,
+        text: textArray,
         sender: "luna",
       };
 
       setMessages((prevMessages) => [...prevMessages, lunaResponse]);
+      setContext(response.data.context); // Update context based on Luna's response
     } catch (error) {
       console.error("Error:", error.message);
       const errorMessage = {
@@ -163,9 +162,10 @@ const MainContainer = () => {
       setLoading(false);
     }
   };
+  
 
   const handleOnSubmit = async (e) => {
-    if (e.key === "Enter" && textInput.trim() !== "") {
+    if (e.key === "Enter" || (e.type === "click" && textInput.trim() !== "")) {
       e.preventDefault();
       await sendMessage(textInput, "user");
     }
@@ -194,22 +194,23 @@ const MainContainer = () => {
   };
 
   const clearChat = () => {
-    e.preventDefault();
     setMessages([]);
   };
 
   const handleCopyClick = (text) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset the "Copied" state after 2 seconds
+    setTimeout(() => setCopied(false), 2000); // 2 seconds
   };
 
+ 
+
   return (
-    <div className=" bg-Lig p-3 backPattern w-full sm:h-screen h-[100vh] flex justify-center overflow-hidden items-center relative">
+    <div className=" bg-Lig sm:p-3 p-0 backPattern w-full h-screen flex justify-center overflow-hidden items-center relative">
       <div className="circle1"></div>
       <div className="circle2"></div>
       <div
-        className="w-full h-full bg-[#21251f8c] rounded-xl relative backdrop-blur-sm overflow-y-auto"
+        className="w-full h-full bg-[#21251f8c] sm:rounded-xl rounded-none relative backdrop-blur-sm overflow-y-auto"
         ref={chatContainerRef}
       >
         {/* <div className="w-full h-full z-1 backPattern absolute"></div> */}
@@ -235,8 +236,8 @@ const MainContainer = () => {
 
         {/* ChatBoxContent */}
 
-        <div className="w-full flex flex-col justify-center items-center mt-5 mb-20 ">
-          <div className="w-full flex flex-col justify-center items-center mt-5 mb-20">
+        <div className="w-full flex flex-col  justify-center items-center mb-20 ">
+          <div className="w-full flex flex-col justify-center items-center mt-5 sm:mb-2 mb-7">
             {/* Display User Messages */}
             {messages.map((message, index) => (
               <div
@@ -256,6 +257,7 @@ const MainContainer = () => {
                       {message.sender === "user" ? "You" : "Luna"}
                     </span>
                   </span>
+
                   <div
                     className="ml-7 max-w-5xl font-pop text-sm text-ash"
                     dangerouslySetInnerHTML={{
@@ -281,10 +283,7 @@ const MainContainer = () => {
             ))}
           </div>
           {loading && (
-            // Display loading animation if loading is true
-            <div className="w-full flex justify-center items-center">
-              <div className="border-t-4 border-van border-solid rounded-full animate-spin h-8 w-8"></div>
-            </div>
+            <span className="loader"></span>
           )}
         </div>
       </div>
@@ -294,8 +293,9 @@ const MainContainer = () => {
         onSubmit={handleOnSubmit}
         className=" w-full fixed z-[999] bottom-0 p-5 flex flex-col items-center justify-center"
       >
-        <div className="sm:w-[65%] w-[80%] mb-1">
+        <div className="sm:w-[65%] w-[95%] mb-1">
           <button
+            type="button"
             className="text-xs font-pop text-ash p-1 hover:bg-Gre hover:text-Lig transition duration-200 ease-in-out hover:border-bitter border-Blu border-2 rounded-lg bg-transparent backdrop-blur-sm"
             onClick={clearChat}
             disabled={loading}
@@ -303,7 +303,7 @@ const MainContainer = () => {
             + New
           </button>
         </div>
-        <div className=" sm:w-2/3 w-11/12 rounded-2xl bg-transparent backdrop-blur-sm border-2 border-Blu flex items-center">
+        <div className=" sm:w-2/3 w-full rounded-2xl bg-transparent backdrop-blur-sm border-2 border-Blu flex items-center">
           <input
             type="text"
             placeholder="Ask me anything..."
@@ -315,7 +315,13 @@ const MainContainer = () => {
           />
 
           <div className="p-2 bg-Gre rounded-xl mr-1 flex justify-center items-center">
-            <button type="submit" disabled={loading}>
+            <button
+              type="submit"
+              disabled={loading}
+              onClick={(e) => {
+                handleOnSubmit(e);
+              }}
+            >
               <img src={send} alt="submit button" className="w-[20px]" />
             </button>
           </div>
